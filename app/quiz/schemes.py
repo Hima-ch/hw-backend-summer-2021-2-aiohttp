@@ -7,15 +7,20 @@ class ThemeSchema(Schema):
 
 
 class AnswerSchema(Schema):
-    pass
+    title = fields.Str(required=True)
+    is_correct = fields.Bool(required=True)
+
 
 
 class QuestionSchema(Schema):
-    pass
+    id = fields.Int(required=False)
+    title = fields.Str(required=True)
+    theme_id = fields.Int(required=True)
+    answers = fields.List(fields.Nested(AnswerSchema), required=True)
 
 
 class ThemeListSchema(Schema):
-    pass
+    themes = fields.List(fields.Nested(ThemeSchema))
 
 
 class ThemeIdSchema(Schema):

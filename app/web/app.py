@@ -3,6 +3,7 @@ from aiohttp.web import (
     Request as AiohttpRequest,
     View as AiohttpView,
 )
+from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
 from app.admin.models import Admin
 from app.store import Store, setup_store
@@ -11,7 +12,8 @@ from app.web.config import Config, setup_config
 from app.web.logger import setup_logging
 from app.web.middlewares import setup_middlewares
 from app.web.routes import setup_routes
-
+from cryptography import fernet
+from aiohttp_session import setup as setup_session
 
 class Application(AiohttpApplication):
     config: Config | None = None
@@ -50,4 +52,6 @@ def setup_app(config_path: str) -> Application:
     setup_routes(app)
     setup_middlewares(app)
     setup_store(app)
+    fernet_key = b"0123456789ABCDEF0123456789ABCDEF"
+    setup_session(app, EncryptedCookieStorage(fernet_key))
     return app
